@@ -7,18 +7,6 @@ provider "aws" {
 
 provider "random" {}
 
-resource "random_pet" "name" {}
-
-resource "aws_instance" "web" {
-  ami           = "ami-0ad522a4a529e7aa8"
-  instance_type = "t2.micro"
-  user_data     = file("init-script.sh")
-
-  tags = {
-    Name = random_pet.name.id
-  }
-}
-
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.13.0"
@@ -34,5 +22,17 @@ module "vpc" {
   tags = {
     Terraform = "true"
     Environment = "dev"
+  }
+}
+
+resource "random_pet" "name" {}
+
+resource "aws_instance" "web" {
+  ami           = "ami-0ad522a4a529e7aa8"
+  instance_type = "t2.micro"
+  user_data     = file("init-script.sh")
+
+  tags = {
+    Name = random_pet.name.id
   }
 }
